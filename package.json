@@ -12,7 +12,7 @@
   "author": "",
   "license": "BEERWARE",
   "dependencies": {
-    "@luasenvy/rapidfire": "^0.1.6",
+    "@luasenvy/rapidfire": "^0.1.8",
     "vite": "^2.0.0-beta.67"
   },
   "devDependencies": {
