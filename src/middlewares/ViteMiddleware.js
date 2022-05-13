@@ -1,13 +1,38 @@
-const fs = require('fs')
-const path = require('path')
+/* **************************************************************************
+ *   ██╗  ███╗   ███╗  ██████╗    ██████╗   ██████╗   ████████╗  ███████╗   *
+ *   ██║  ████╗ ████║  ██╔══██╗  ██╔═══██╗  ██╔══██╗  ╚══██╔══╝  ██╔════╝   *
+ *   ██║  ██╔████╔██║  ██████╔╝  ██║   ██║  ██████╔╝     ██║     ███████╗   *
+ *   ██║  ██║╚██╔╝██║  ██╔═══╝   ██║   ██║  ██╔══██╗     ██║     ╚════██║   *
+ *   ██║  ██║ ╚═╝ ██║  ██║       ╚██████╔╝  ██║  ██║     ██║     ███████║   *
+ *   ╚═╝  ╚═╝     ╚═╝  ╚═╝        ╚═════╝   ╚═╝  ╚═╝     ╚═╝     ╚══════╝   *
+ ************************************************************************** */
+import { resolve as pathResolve, dirname as pathDirname } from 'path'
+import { readFile as fsReadFile } from 'fs/promises'
+import { fileURLToPath as urlFileURLToPath } from 'url'
 
-const { createServer: createViteServer } = require('vite')
+import { Interfaces } from '@luasenvy/rapidfire'
 
-const {
-  Interfaces: { Middleware },
-} = require('@luasenvy/rapidfire')
+import { createServer as createViteServer } from 'vite'
 
-class ViteMiddleware extends Middleware {
+/* **************************************************************************
+ *                  ██╗   ██╗   █████╗   ██████╗   ███████╗                 *
+ *                  ██║   ██║  ██╔══██╗  ██╔══██╗  ██╔════╝                 *
+ *                  ██║   ██║  ███████║  ██████╔╝  ███████╗                 *
+ *                  ╚██╗ ██╔╝  ██╔══██║  ██╔══██╗  ╚════██║                 *
+ *                   ╚████╔╝   ██║  ██║  ██║  ██║  ███████║                 *
+ *                    ╚═══╝    ╚═╝  ╚═╝  ╚═╝  ╚═╝  ╚══════╝                 *
+ ************************************************************************** */
+const __dirname = pathDirname(urlFileURLToPath(import.meta.url))
+
+/* **************************************************************************
+ *                      ██████╗   ██╗   ██╗  ███╗   ██╗                     *
+ *                      ██╔══██╗  ██║   ██║  ████╗  ██║                     *
+ *                      ██████╔╝  ██║   ██║  ██╔██╗ ██║                     *
+ *                      ██╔══██╗  ██║   ██║  ██║╚██╗██║                     *
+ *                      ██║  ██║  ╚██████╔╝  ██║ ╚████║                     *
+ *                      ╚═╝  ╚═╝   ╚═════╝   ╚═╝  ╚═══╝                     *
+ ************************************************************************** */
+class ViteMiddleware extends Interfaces.Middleware {
   constructor() {
     super()
 
@@ -32,7 +57,7 @@ class ViteMiddleware extends Middleware {
       const { originalUrl: url } = req
 
       // 1. Read index.html
-      let template = fs.readFileSync(path.resolve(__dirname, '../vite/index.html'), 'utf-8')
+      let template = await fsReadFile(pathResolve(__dirname, '../vite/index.html'), 'utf-8')
 
       // 2. Apply vite HTML transforms. This injects the vite HMR client, and
       //    also applies HTML transforms from Vite plugins, e.g. global preambles
@@ -63,4 +88,13 @@ class ViteMiddleware extends Middleware {
     }
   }
 }
-module.exports = ViteMiddleware
+
+/* **************************************************************************
+ *      ██████╗   ███████╗  ████████╗  ██╗   ██╗  ██████╗   ███╗   ██╗      *
+ *      ██╔══██╗  ██╔════╝  ╚══██╔══╝  ██║   ██║  ██╔══██╗  ████╗  ██║      *
+ *      ██████╔╝  █████╗       ██║     ██║   ██║  ██████╔╝  ██╔██╗ ██║      *
+ *      ██╔══██╗  ██╔══╝       ██║     ██║   ██║  ██╔══██╗  ██║╚██╗██║      *
+ *      ██║  ██║  ███████╗     ██║     ╚██████╔╝  ██║  ██║  ██║ ╚████║      *
+ *      ╚═╝  ╚═╝  ╚══════╝     ╚═╝      ╚═════╝   ╚═╝  ╚═╝  ╚═╝  ╚═══╝      *
+ ************************************************************************** */
+export default ViteMiddleware
